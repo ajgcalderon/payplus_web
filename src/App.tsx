@@ -3,6 +3,9 @@ import logo from './logo.svg';
 import { Router, Route, BrowserRouter, Routes } from 'react-router-dom';
 import {} from 'bootstrap'
 import Login from './Views/Login/login';
+import Administration from './Views/Administration/administration';
+import Sucursal from './Views/Sucursal/sucursal'
+
 import './App.css';
 
 function App() {
@@ -10,7 +13,9 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path='/Login' element={<Login />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/administration' element={<Administration />} />
+          <Route path='/sucursal' element={<Sucursal />} />
         </Routes>
       </BrowserRouter>
     </div>
