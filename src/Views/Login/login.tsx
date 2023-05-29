@@ -1,5 +1,6 @@
-import React, {ChangeEvent, useState} from "react";
-
+import React, {ChangeEvent, useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+import axios, { Axios } from 'axios'
 import Form from 'react-bootstrap/Form'
 import Button from "react-bootstrap/Button";
 import Card from 'react-bootstrap/Card';
@@ -11,18 +12,32 @@ interface User{
 }
 
 const Login = () => {
+    const [login,setLogin] = useState<boolean>(false)
     const [user, setUser] = useState<User>({
         username:"",
         password:""
     })
-    const onChange = (e: ChangeEvent<any>) => {
-        console.log(e)
-        // const {name,value} = e.target
-        // setUser({
-        //     ...user,
-        //     [name]:value
-        // })
+    const navigate = useNavigate();
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {name,value} = e.target
+        setUser({
+            ...user,
+            [name]:value
+        })
     }
+    const onSubmit = async () => {
+        let {data} = await axios.post('http://localhost:8000/api/admin/login/',user,{responseType:"json"});
+        console.log(data)
+    }
+    useEffect(() => {
+        axios.get('http://localhost:8000/api/users/')
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => {
+            console.error(err)
+        })
+    },[])
     return (
         <div className="">
             <Container className="text-center">
@@ -34,14 +49,16 @@ const Login = () => {
                         <Form>
                             <Form.Group>
                                 <Form.Label >Nombre de Usuario</Form.Label>
-                                <Form.Control type="text" value={user.username} onChange={e => onChange(e)} placeholder="Nombre de Usuario"  />
+                                <input type="text" className="form-control" name="username" value={user.username} onChange={e => onChange(e)} placeholder="Nombre de Usuario"/>
+                                {/* <Form.Control type="text" value={user.username} onChange={e => onChange(e)} placeholder="Nombre de Usuario"  /> */}
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Contraseña</Form.Label>
-                                <Form.Control type="password" value={user.password} onChange={e => onChange(e)} placeholder="Contraseña"  />
+                                <input type="text" className="form-control" name="password" value={user.password} onChange={e => onChange(e)} placeholder="Contraseña"/>
+                                {/* <Form.Control type="password" value={user.password} onChange={e => onChange(e)} placeholder="Contraseña"  /> */}
                             </Form.Group>
                             <Form.Group className="mt-2">
-                                <Button variant="primary" type="submit">Enviar</Button>
+                                <Button variant="primary" type="submit" onClick={e => onSubmit()}>Enviar</Button>
                             </Form.Group>
                         </Form>
                     </Card.Body>
